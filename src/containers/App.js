@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person'
-import Radium, { StyleRoot } from 'radium'
+import app from './App.module.css';
+import Person from '../components/Persons/Person/Person'
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary'
+
 class App extends Component {
   state = {
       persons: [
@@ -45,23 +46,25 @@ class App extends Component {
       font: 'inherit',
       border: '1x solid blue',
       padding: '8px',
-      cursor: 'pointer',':hover' :{backgroundColor: 'lightgreen', text: 'black'}
+      cursor: 'pointer'
     }
     let persons = null;
     if(this.state.showPersons) {
       persons = (
-        this.state.persons.map((person, index) => {
-          return  <Person 
-                    name={person.name}
-                    age={person.age}
-                    delete={() => this.deletePersonHandler(index)}
-                    key={person.id}
-                    changed={(event) => this.nameChangedHandler(event, person.id)}
-                  />
-        })
+        <div>
+          {this.state.persons.map((person, index) => {
+            return  <ErrorBoundary key={person.id}>
+                      <Person 
+                        name={person.name}
+                        age={person.age}
+                        delete={() => this.deletePersonHandler(index)}
+                        changed={(event) => this.nameChangedHandler(event, person.id)}
+                      />
+                    </ ErrorBoundary> 
+          })}
+        </div>
       )
       style.backgroundColor = 'red';
-      style[':hover'] = {backgroundColor: 'salmon', text: 'black'};
     }
     const classes  = [];
     if(this.state.persons.length <= 2) {
@@ -74,18 +77,16 @@ class App extends Component {
 
 
     return (
-      <StyleRoot>
         <div className="App">
           <h1>Hi, I'm a react app</h1>
           <p className={classes.join(' ')}>This is really working</p>
           <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button>
           {persons}
         </div>
-      </StyleRoot>
 
     );
     // return React.createElement('div', null, React.createElement('h1', {className: 'App'}, 'Hi, I\'m a react app'));
   }
 }
 
-export default Radium(App);
+export default App;
