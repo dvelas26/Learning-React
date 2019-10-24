@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import app from './App.module.css';
-import Person from '../components/Persons/Person/Person'
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary'
+import Persons from '../components/Persons/Persons';
+import classes from './App.module.css';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
   state = {
@@ -40,52 +40,26 @@ class App extends Component {
 
 
   render() {
-    const style = {
-      backgroundColor: 'green',
-      color: 'whtie',
-      font: 'inherit',
-      border: '1x solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    }
     let persons = null;
     if(this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return  <ErrorBoundary key={person.id}>
-                      <Person 
-                        name={person.name}
-                        age={person.age}
-                        delete={() => this.deletePersonHandler(index)}
-                        changed={(event) => this.nameChangedHandler(event, person.id)}
-                      />
-                    </ ErrorBoundary> 
-          })}
-        </div>
-      )
-      style.backgroundColor = 'red';
+           <Persons 
+              persons={this.state.persons}
+              clicked={this.deletePersonHandler}
+              changed={this.nameChangedHandler} 
+           />
+      );
     }
-    const classes  = [];
-    if(this.state.persons.length <= 2) {
-      classes.push('red');
-    }
-
-    if(this.state.persons.length <= 1) {
-      classes.push('bold');
-    }
-
-
     return (
-        <div className="App">
-          <h1>Hi, I'm a react app</h1>
-          <p className={classes.join(' ')}>This is really working</p>
-          <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button>
+        <div className={classes.App}>
+          <Cockpit 
+            showPersons={this.state.showPersons}
+            persons={this.state.persons}
+            click={this.togglePersonHandler}
+          />
           {persons}
         </div>
-
     );
-    // return React.createElement('div', null, React.createElement('h1', {className: 'App'}, 'Hi, I\'m a react app'));
   }
 }
 
